@@ -353,7 +353,13 @@ export default function TicTacToeGame({
   return (
     <div style={{ display: 'flex', flexDirection: 'column', flex: 1, paddingBottom: '20px' }}>
       {/* Top Header: Back button & Title */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+      <div style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'space-between', 
+        marginBottom: '16px',
+        paddingTop: '4px'
+      }}>
         <button
           onClick={() => {
             sounds.playNav();
@@ -361,15 +367,21 @@ export default function TicTacToeGame({
             onBack();
           }}
           className="btn-neon-purple"
-          style={{ padding: '8px 14px', borderRadius: '12px' }}
+          style={{ 
+            padding: '10px 16px', 
+            borderRadius: '14px',
+            fontSize: '1rem',
+            fontWeight: 800,
+            boxShadow: '0 0 14px rgba(184, 43, 245, 0.6)'
+          }}
         >
-          <ArrowLeft size={18} />
+          <ArrowLeft size={20} />
           <span>Geri</span>
         </button>
 
         <h2 style={{
           fontFamily: "'Fredoka', sans-serif",
-          fontSize: '1.45rem',
+          fontSize: '1.5rem',
           color: '#ffea79',
           textShadow: '0 0 12px rgba(255, 215, 0, 0.8)'
         }}>
@@ -384,10 +396,10 @@ export default function TicTacToeGame({
             resetBoard(false);
           }}
           className="btn-neon-cyan"
-          style={{ padding: '8px 12px', borderRadius: '12px' }}
+          style={{ padding: '10px 14px', borderRadius: '14px' }}
           title="Yeniden Başlat"
         >
-          <RotateCcw size={18} />
+          <RotateCcw size={20} />
         </button>
       </div>
 

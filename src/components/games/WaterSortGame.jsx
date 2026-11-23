@@ -122,13 +122,13 @@ export default function WaterSortGame({ onBack }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', flex: 1, paddingBottom: '20px' }}>
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', paddingTop: '4px' }}>
         <button
           onClick={() => { sounds.playNav(); onBack(); }}
           className="btn-neon-purple"
-          style={{ padding: '8px 14px', borderRadius: '12px' }}
+          style={{ padding: '10px 16px', borderRadius: '14px', fontWeight: 800 }}
         >
-          <ArrowLeft size={18} />
+          <ArrowLeft size={20} />
           <span>Geri</span>
         </button>
 
