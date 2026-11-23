@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="75%">
+      <stop offset="0%" stop-color="#1f093d"/>
+      <stop offset="100%" stop-color="#0a0217"/>
+    </radialGradient>
+    <filter id="glow-cyan" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    <filter id="glow-pink" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="110" fill="url(#bg)" stroke="#b026ff" stroke-width="8"/>
+  <!-- Grid Lines -->
+  <line x1="190" y1="90" x2="190" y2="422" stroke="#6819a6" stroke-width="12" stroke-linecap="round"/>
+  <line x1="322" y1="90" x2="322" y2="422" stroke="#6819a6" stroke-width="12" stroke-linecap="round"/>
+  <line x1="90" y1="190" x2="422" y2="190" stroke="#6819a6" stroke-width="12" stroke-linecap="round"/>
+  <line x1="90" y1="322" x2="422" y2="322" stroke="#6819a6" stroke-width="12" stroke-linecap="round"/>
+  
+  <!-- Neon X -->
+  <g filter="url(#glow-cyan)" stroke="#00f3ff" stroke-width="22" stroke-linecap="round">
+    <line x1="110" y1="110" x2="170" y2="170"/>
+    <line x1="170" y1="110" x2="110" y2="170"/>
+  </g>
+  <!-- Neon O -->
+  <circle cx="372" cy="140" r="32" fill="none" stroke="#ff2a85" stroke-width="20" filter="url(#glow-pink)"/>
+  <!-- Center X -->
+  <g filter="url(#glow-cyan)" stroke="#00f3ff" stroke-width="24" stroke-linecap="round">
+    <line x1="226" y1="226" x2="286" y2="286"/>
+    <line x1="286" y1="226" x2="226" y2="286"/>
+  </g>
+  <!-- Bottom O -->
+  <circle cx="140" cy="372" r="32" fill="none" stroke="#ff2a85" stroke-width="20" filter="url(#glow-pink)"/>
+  
+  <!-- Winning Strike Line -->
+  <line x1="80" y1="432" x2="432" y2="80" stroke="#ff007f" stroke-width="14" stroke-linecap="round" filter="url(#glow-pink)"/>
+</svg>

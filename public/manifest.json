@@ -1,0 +1,17 @@
+{
+  "short_name": "NeonTicTacToe",
+  "name": "Neon Tic Tac Toe Glow - 2 Player",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192 512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#0d0221",
+  "theme_color": "#0d0221",
+  "display": "standalone",
+  "orientation": "portrait"
+}
