@@ -3,10 +3,16 @@ import Header from './components/Header';
 import HomeMenu from './components/HomeMenu';
 import TwoPlayerHub from './components/TwoPlayerHub';
 import TicTacToeGame from './components/TicTacToeGame';
+import StackSixGame from './components/games/StackSixGame';
+import TombRunGame from './components/games/TombRunGame';
+import BalanceDropGame from './components/games/BalanceDropGame';
+import ArrowPuzzleGame from './components/games/ArrowPuzzleGame';
+import WaterSortGame from './components/games/WaterSortGame';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('home'); // 'home' | '2player'
   const [currentScreen, setCurrentScreen] = useState('menu'); // 'menu' | 'game'
+  const [activeGame, setActiveGame] = useState('tictactoe'); // 'tictactoe' | 'stacksix' | 'tombrun' | 'balancedrop' | 'arrowpuzzle' | 'watersort'
   const [selectedGameMode, setSelectedGameMode] = useState('bot'); // 'bot' | 'local' | 'tabletop' | 'online'
 
   // Profile State (Matching screenshot "HK7 ♂" Bio: ...)
@@ -57,6 +63,7 @@ export default function App() {
       const params = new URLSearchParams(window.location.search);
       const roomParam = params.get('room');
       if (roomParam) {
+        setActiveGame('tictactoe');
         setSelectedGameMode('online');
         setCurrentScreen('game');
       }
@@ -71,7 +78,8 @@ export default function App() {
     }));
   };
 
-  const handleLaunchGame = (mode = 'bot') => {
+  const handleLaunchGame = (gameId = 'tictactoe', mode = 'bot') => {
+    setActiveGame(gameId);
     setSelectedGameMode(mode);
     setCurrentScreen('game');
   };
@@ -102,19 +110,38 @@ export default function App() {
             />
 
             {activeTab === 'home' ? (
-              <HomeMenu onSelectGame={() => handleLaunchGame('bot')} />
+              <HomeMenu onSelectGame={(gameId) => handleLaunchGame(gameId, 'bot')} />
             ) : (
-              <TwoPlayerHub onLaunchGame={handleLaunchGame} />
+              <TwoPlayerHub onLaunchGame={(mode) => handleLaunchGame('tictactoe', mode)} />
             )}
           </>
         ) : (
-          <TicTacToeGame
-            profile={profile}
-            initialMode={selectedGameMode}
-            onBack={() => setCurrentScreen('menu')}
-            stats={stats}
-            onUpdateStats={handleUpdateStats}
-          />
+          <>
+            {activeGame === 'tictactoe' && (
+              <TicTacToeGame
+                profile={profile}
+                initialMode={selectedGameMode}
+                onBack={() => setCurrentScreen('menu')}
+                stats={stats}
+                onUpdateStats={handleUpdateStats}
+              />
+            )}
+            {activeGame === 'stacksix' && (
+              <StackSixGame onBack={() => setCurrentScreen('menu')} />
+            )}
+            {activeGame === 'tombrun' && (
+              <TombRunGame onBack={() => setCurrentScreen('menu')} />
+            )}
+            {activeGame === 'balancedrop' && (
+              <BalanceDropGame onBack={() => setCurrentScreen('menu')} />
+            )}
+            {activeGame === 'arrowpuzzle' && (
+              <ArrowPuzzleGame onBack={() => setCurrentScreen('menu')} />
+            )}
+            {activeGame === 'watersort' && (
+              <WaterSortGame onBack={() => setCurrentScreen('menu')} />
+            )}
+          </>
         )}
       </main>
     </>

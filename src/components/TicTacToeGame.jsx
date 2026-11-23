@@ -277,38 +277,73 @@ export default function TicTacToeGame({
     };
   }, []);
 
-  // Calculate Strike Line SVG Coordinates
+  // Calculate Strike Line SVG Coordinates accurately without breaking CSS Grid
   const renderWinningStrikeLine = () => {
     if (!gameResult || !gameResult.line || gameResult.winner === 'draw') return null;
-    const [startIdx, , endIdx] = [
-      gameResult.line[0], 
-      gameResult.line[1], 
-      gameResult.line[gameResult.line.length - 1]
-    ];
+    
+    const line = gameResult.line;
+    const startIdx = line[0];
+    const endIdx = line[line.length - 1];
 
     const startRow = Math.floor(startIdx / boardSize);
     const startCol = startIdx % boardSize;
     const endRow = Math.floor(endIdx / boardSize);
     const endCol = endIdx % boardSize;
 
-    const cellPercent = 100 / boardSize;
-    const x1 = (startCol + 0.5) * cellPercent;
-    const y1 = (startRow + 0.5) * cellPercent;
-    const x2 = (endCol + 0.5) * cellPercent;
-    const y2 = (endRow + 0.5) * cellPercent;
+    let x1, y1, x2, y2;
+
+    if (startRow === endRow) {
+      // Horizontal row win
+      y1 = y2 = ((startRow + 0.5) / boardSize) * 100;
+      x1 = 4;
+      x2 = 96;
+    } else if (startCol === endCol) {
+      // Vertical column win
+      x1 = x2 = ((startCol + 0.5) / boardSize) * 100;
+      y1 = 4;
+      y2 = 96;
+    } else if (startRow < endRow && startCol < endCol) {
+      // Diagonal (\)
+      x1 = 6;
+      y1 = 6;
+      x2 = 94;
+      y2 = 94;
+    } else {
+      // Anti-diagonal (/)
+      x1 = 6;
+      y1 = 94;
+      x2 = 94;
+      y2 = 6;
+    }
+
+    const lineColor = gameResult.winner === 'X' ? '#00f0ff' : '#ff2a85';
 
     return (
-      <svg className="win-overlay-line" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <svg
+        style={{
+          position: 'absolute',
+          top: '14px',
+          left: '14px',
+          right: '14px',
+          bottom: '14px',
+          width: 'calc(100% - 28px)',
+          height: 'calc(100% - 28px)',
+          pointerEvents: 'none',
+          zIndex: 35
+        }}
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+      >
         <line
           x1={x1}
           y1={y1}
           x2={x2}
           y2={y2}
-          stroke={gameResult.winner === 'X' ? '#00f0ff' : '#ff2a85'}
-          strokeWidth="4"
+          stroke={lineColor}
+          strokeWidth="6"
           strokeLinecap="round"
           style={{
-            filter: `drop-shadow(0 0 8px ${gameResult.winner === 'X' ? '#00f0ff' : '#ff2a85'}) drop-shadow(0 0 16px #ffffff)`
+            filter: `drop-shadow(0 0 8px ${lineColor}) drop-shadow(0 0 16px #ffffff)`
           }}
         />
       </svg>
@@ -448,7 +483,7 @@ export default function TicTacToeGame({
         </button>
       </div>
 
-      {/* Sub-controls: Difficulty (for Bot) OR Online Room Bar */}
+      {/* Sub-controls: Difficulty (for Bot) */}
       {mode === 'bot' && (
         <div style={{
           display: 'flex',
@@ -732,42 +767,55 @@ export default function TicTacToeGame({
         </div>
       </div>
 
-      {/* Main Tic Tac Toe Board */}
+      {/* Main Tic Tac Toe Board Wrapper (Guarantees SVG line NEVER shifts CSS grid cells) */}
       <div 
         ref={boardRef}
-        className="neon-board"
         style={{
-          gridTemplateColumns: `repeat(${boardSize}, 1fr)`,
-          gridTemplateRows: `repeat(${boardSize}, 1fr)`
+          position: 'relative',
+          width: '100%',
+          maxWidth: '380px',
+          aspectRatio: '1 / 1',
+          margin: '0 auto'
         }}
       >
+        <div 
+          className="neon-board"
+          style={{
+            width: '100%',
+            height: '100%',
+            gridTemplateColumns: `repeat(${boardSize}, 1fr)`,
+            gridTemplateRows: `repeat(${boardSize}, 1fr)`
+          }}
+        >
+          {board.map((cell, idx) => {
+            const isWinningCell = gameResult?.line?.includes(idx);
+
+            return (
+              <button
+                key={idx}
+                className={`cell-btn ${isWinningCell ? 'highlight' : ''}`}
+                onClick={() => handleCellClick(idx)}
+                disabled={cell !== null || !!gameResult || isBotThinking}
+                aria-label={`Kare ${idx}`}
+              >
+                {cell === 'X' && (
+                  <svg viewBox="0 0 50 50" width={boardSize === 3 ? "54" : "36"} height={boardSize === 3 ? "54" : "36"}>
+                    <line x1="10" y1="10" x2="40" y2="40" className="neon-svg-x" />
+                    <line x1="40" y1="10" x2="10" y2="40" className="neon-svg-x" />
+                  </svg>
+                )}
+                {cell === 'O' && (
+                  <svg viewBox="0 0 50 50" width={boardSize === 3 ? "54" : "36"} height={boardSize === 3 ? "54" : "36"}>
+                    <circle cx="25" cy="25" r="15" className="neon-svg-o" />
+                  </svg>
+                )}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Winning Strike Overlay - sibling to grid, prevents all shift bugs */}
         {renderWinningStrikeLine()}
-
-        {board.map((cell, idx) => {
-          const isWinningCell = gameResult?.line?.includes(idx);
-
-          return (
-            <button
-              key={idx}
-              className={`cell-btn ${isWinningCell ? 'highlight' : ''}`}
-              onClick={() => handleCellClick(idx)}
-              disabled={cell !== null || !!gameResult || isBotThinking}
-              aria-label={`Kare ${idx}`}
-            >
-              {cell === 'X' && (
-                <svg viewBox="0 0 50 50" width={boardSize === 3 ? "54" : "36"} height={boardSize === 3 ? "54" : "36"}>
-                  <line x1="10" y1="10" x2="40" y2="40" className="neon-svg-x" />
-                  <line x1="40" y1="10" x2="10" y2="40" className="neon-svg-x" />
-                </svg>
-              )}
-              {cell === 'O' && (
-                <svg viewBox="0 0 50 50" width={boardSize === 3 ? "54" : "36"} height={boardSize === 3 ? "54" : "36"}>
-                  <circle cx="25" cy="25" r="15" className="neon-svg-o" />
-                </svg>
-              )}
-            </button>
-          );
-        })}
       </div>
 
       {/* Online Quick Taunt Emojis */}
